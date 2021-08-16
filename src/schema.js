@@ -19,17 +19,26 @@ const typeDefs = gql`
         id: ID!
         rider: Rider!
         driver: Driver!
-        #      date: Datetime
+        # date: Datetime
         pickup: [Float]!
         dropoff: [Float]!
     }
 
+    type RouteConfirmation {
+        statusCode: Int!
+        requestId: String!
+    }
+
     type Query {
-        #        return logged in rider
+        # return logged in rider
         rider: Rider
         trip(id: ID!): Trip
         ridersTrips(riderId: ID!): [Trip]!
         driversTrips(driverId: ID!): [Trip]!
+        # micro services 
+        price: Float
+        route: RouteConfirmation
+        ride: Trip
     }
 
     type TripUpdateResponse {
