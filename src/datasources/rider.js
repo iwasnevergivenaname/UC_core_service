@@ -26,7 +26,7 @@ class RiderAPI extends DataSource {
   async orderTrip({tripId}) {
     const riderId = this.context.rider.id
     const res = await this.store.trips.findOrCreate({
-      where: {tripId, riderId}
+      where: {id: tripId, riderId}
     })
     return res && res.length ? res[0].get() : false
   }
@@ -39,8 +39,13 @@ class RiderAPI extends DataSource {
   async getTripsByRider() {
     const riderId = this.context.rider.id
     const found = await this.store.trips.findAll({where: {riderId}})
-    return found && found.length ? found.map(t => t.dataValues.riderId).filter(t => !!t)
-      : []
+    found.map(t => {
+        t.dataValues.riderId
+      })
+      .filter(t => {
+        !!t
+      })
+    return found
 
   }
 

@@ -1,4 +1,5 @@
 const SQL = require("sequelize")
+const path = require("path")
 
 
 module.exports.createStore = () => {
@@ -9,7 +10,7 @@ module.exports.createStore = () => {
 
   const db = new SQL("database", "username", "password", {
     dialect: "sqlite",
-    storage: "../store.sqlite",
+    storage: path.resolve(__dirname, '../store.sqlite'),
     operatorsAliases,
     logging: false
   })
@@ -41,5 +42,15 @@ module.exports.createStore = () => {
     // dropoff: SQL.ARRAY
   })
 
-  return {riders, trips}
+  riders.sync().catch((e) => {
+    console.log(e)
+    process.exit()
+  })
+
+  trips.sync().catch((e) => {
+    console.log(e)
+    process.exit()
+  })
+
+  return {db, riders, trips}
 }

@@ -8,6 +8,7 @@ const PriceEstimateAPI = require("./datasources/priceEstimate")
 const RouteSuggestionAPI = require("./datasources/routeSuggestion")
 const RideExperienceAPI = require("./datasources/rideExperience")
 const RiderAPI = require("./datasources/rider")
+const TripAPI = require("./datasources/trip")
 
 const store = createStore()
 
@@ -30,7 +31,8 @@ const server = new ApolloServer({
     priceEstimateAPI: new PriceEstimateAPI(),
     routeSuggestionAPI: new RouteSuggestionAPI(),
     rideExperienceAPI: new RideExperienceAPI(),
-    riderAPI: new RiderAPI({store})
+    riderAPI: new RiderAPI({store}),
+    tripAPI: new TripAPI({store})
   })
 })
 

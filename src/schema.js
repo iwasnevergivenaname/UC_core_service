@@ -8,6 +8,8 @@ const typeDefs = gql`
         password: String!
         firstName: String
         lastName: String
+        trips: [Trip]
+        token: String
     }
 
     type Driver {
@@ -17,11 +19,11 @@ const typeDefs = gql`
 
     type Trip {
         id: ID!
-        rider: Rider!
-        driver: Driver!
+        riderId: ID!
+        driverId: Driver
         # date: Datetime
-        pickup: [Float]!
-        dropoff: [Float]!
+        pickup: [Float]
+        dropoff: [Float]
     }
 
     type RouteConfirmation {
@@ -32,7 +34,7 @@ const typeDefs = gql`
     type Query {
         # return logged in rider
         rider: Rider
-        trip(id: ID!): Trip
+        trip: Trip
 #        ridersTrips(riderId: ID!): [Trip]!
 #        driversTrips(driverId: ID!): [Trip]!
         # micro services 
@@ -54,8 +56,9 @@ const typeDefs = gql`
     }
 
     type Mutation {
+        createTrip(riderId: ID!): TripUpdateResponse!
         startTrip(tripId: ID!): TripUpdateResponse!
-        cancleTrip(tripId: ID!): TripUpdateResponse!
+        cancelTrip(tripId: ID!): TripUpdateResponse!
 #        updateRider(riderId: ID!): RiderUpdateResponse!
 #        removeRider(riderId: ID!): RiderUpdateResponse!
         login(email: String): Rider
