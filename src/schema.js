@@ -33,8 +33,8 @@ const typeDefs = gql`
         # return logged in rider
         rider: Rider
         trip(id: ID!): Trip
-        ridersTrips(riderId: ID!): [Trip]!
-        driversTrips(driverId: ID!): [Trip]!
+#        ridersTrips(riderId: ID!): [Trip]!
+#        driversTrips(driverId: ID!): [Trip]!
         # micro services 
         price: Float
         route: RouteConfirmation
@@ -55,12 +55,11 @@ const typeDefs = gql`
 
     type Mutation {
         startTrip(tripId: ID!): TripUpdateResponse!
-        updateRider(riderId: ID!): RiderUpdateResponse!
-        removeRider(riderId: ID!): RiderUpdateResponse!
+        cancleTrip(tripId: ID!): TripUpdateResponse!
+#        updateRider(riderId: ID!): RiderUpdateResponse!
+#        removeRider(riderId: ID!): RiderUpdateResponse!
         login(email: String): Rider
     }
-
-
 `
 
 module.exports = typeDefs

@@ -7,7 +7,7 @@ class RouteSuggestionAPI extends RESTDataSource {
   }
 
   async getTripById({tripId}) {
-    const res = await this.get('trip', {id: tripId})
+    const res = await this.get('trip', {id: id})
     return res[0]
   }
 
@@ -22,6 +22,9 @@ class RouteSuggestionAPI extends RESTDataSource {
   }
 
 //  get the route suggestion
+  async getRoute() {
+
+  }
 
   tripReducer(trip) {
     return {

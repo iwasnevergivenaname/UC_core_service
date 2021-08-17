@@ -7,6 +7,9 @@ class RideExperienceAPI extends RESTDataSource {
   }
 
 //   get the ride experience
+  async getRide() {
+
+  }
 }
 
 module.exports = RideExperienceAPI
