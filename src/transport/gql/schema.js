@@ -97,7 +97,8 @@ const typeDefs = gql`
     }
     
     type Subscription {
-        trip(tripId: String!): TripSubscriptionUpdate 
+        trip(tripId: String!): TripSubscriptionUpdate
+        numberIncremented: Int
     }
 `
 

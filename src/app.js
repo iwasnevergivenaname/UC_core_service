@@ -1,6 +1,9 @@
 const Mongo = require("./database")
-const Gql = require("./gql")
-const Http = require("./http")
+const {
+  makeGql,
+  makeHttp,
+  makeWsClient
+} = require("./transport")
 
 module.exports = class App {
   constructor() {
@@ -14,10 +17,22 @@ module.exports = class App {
     await this.db.connect()
 
     // next we are ready to take in connections
-    this.gql = Gql(this)
-    await this.gql.listen()
+    this.gql = makeGql(this)
+    await this.gql.listen(async () => {
+      const tripWsClient = makeWsClient(this)
+      tripWsClient.Config(process.env.TRIP_SERVICE_WS_URL, '/events')
+      await tripWsClient.Begin((data) => {
+        const {id, topic, reqId} = data
+        app.gql.pubSub.publish("TRIP_EVENT", {
+          postCreated: {
+            author: "Ali Baba",
+            comment: "Open sesame"
+          }
+        })
+      })
+    })
 
-    this.http = Http(this)
+    this.http = makeHttp(this)
     await this.http.listen()
   }
 
