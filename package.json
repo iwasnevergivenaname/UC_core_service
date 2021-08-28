@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js",
+    "start": "nodemon --trace-deprecation src/index.js",
     "start:ci": "node src/index.js"
   },
   "keywords": [],
@@ -15,12 +15,19 @@
     "apollo-datasource": "^3.0.3",
     "apollo-datasource-rest": "^3.1.1",
     "apollo-server": "^3.1.2",
+    "apollo-server-core": "^3.3.0",
+    "apollo-server-express": "^3.3.0",
     "apollo-server-testing": "^2.25.2",
+    "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
     "graphql": "^15.5.1",
     "isemail": "^3.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.1.1",
     "path": "^0.12.7",
     "sequelize": "^6.6.5",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "ws": "^8.2.0"
   }
 }
