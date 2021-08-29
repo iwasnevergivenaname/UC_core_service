@@ -9,15 +9,23 @@ const typeDefs = gql`
     input BookTrip {
         pickup: Coordinate!
         dropoff: Coordinate!
+    }
+
+    input TripSession {
         token: String!
     }
 
     #    schema
-
     type Error {
         message: String!
         status : Int!
     }
+
+    type TCoordinate {
+        lat: Float
+        lng: Float
+    }
+
 
     type UserInformation {
         firstName: String
@@ -27,6 +35,15 @@ const typeDefs = gql`
     type Driver {
         id: ID!
         name: String
+    }
+
+    type TripSessionMeta {
+        id: String
+    }
+
+    type BeginTripSession {
+        success: TripSessionMeta
+        error: Error
     }
 
     type Trip {
@@ -51,12 +68,10 @@ const typeDefs = gql`
         password: String!
         information: UserInformation
         trips: [Trip]!
-
-        getTripEstimate(pickup: Coordinate!, dropoff: Coordinate!):Float!
+        getTripEstimate(pickup: Coordinate!, dropoff: Coordinate!):GetTripEstimateResponse!
         getBookingStatus(token: String!): BookingStatus!
     }
-
-
+    
     type RouteConfirmation {
         statusCode: Int!
         requestId: String!
@@ -68,8 +83,16 @@ const typeDefs = gql`
         trip: Trip
     }
 
+    type GetTripEstimateResponseSuccess {
+        estimate: Float!
+    }
+    type GetTripEstimateResponse {
+        success: GetTripEstimateResponseSuccess
+        error: Error
+    }
+
     type TripBookingResponseSuccess {
-        token: String!
+        status: String!
     }
 
     type BookingResponse {
@@ -82,9 +105,16 @@ const typeDefs = gql`
         messgae: String
         rider: User
     }
+
+    type TripSubscriptionUpdateSuccess {
+        tripId: String!
+        message: String!
+        location: TCoordinate!
+    }
     
     type TripSubscriptionUpdate {
-        Age: Int
+        success: TripSubscriptionUpdateSuccess
+        error: Error
     }
 
     type Query {
@@ -93,12 +123,12 @@ const typeDefs = gql`
     }
 
     type Mutation {
+        beginTripSession: BeginTripSession
         bookTrip(booking: BookTrip!): BookingResponse!
     }
-    
+
     type Subscription {
-        trip(tripId: String!): TripSubscriptionUpdate
-        numberIncremented: Int
+        tripSub(tripId: String!): TripSubscriptionUpdate!
     }
 `
 

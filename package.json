@@ -24,6 +24,7 @@
     "express": "^4.17.1",
     "graphql": "^15.5.1",
     "graphql-subscriptions": "^1.2.1",
+    "ioredis": "^4.27.8",
     "isemail": "^3.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.1.1",

@@ -4,7 +4,7 @@ module.exports = function (app) {
   return class UserApi extends DataSource {
     constructor() {
       super()
-      this.client = app.db.model.UserModel
+      this.client = app.db.mongo.model.UserModel
     }
 
     initialize(config) {

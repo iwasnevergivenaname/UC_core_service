@@ -8,7 +8,7 @@ const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY
  * @param server -- the instacne of express that we attach middleware onto
  */
 module.exports = function (app, server) {
-  const UserModel = app.db.model.UserModel
+  const UserModel = app.db.mongo.model.UserModel
   const authRoute = express.Router()
   authRoute.use(bodyParser.json())
 

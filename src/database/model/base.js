@@ -9,6 +9,10 @@ module.exports = function (db) {
       return db.collection(dbName, colName)
     }
 
+    // static async Insert(...params) {
+    //
+    // }
+
     static async FindOne(...params) {
       return this.getCollection(this.dbName, this.collection).findOne(...params)
     }
@@ -17,13 +21,12 @@ module.exports = function (db) {
       return this.getCollection(this.dbName, this.collection).find(...params)
     }
 
-    static async UpdateOne( ...params) {
+    static async UpdateOne(...params) {
       return this.getCollection(this.dbName, this.collection).updateOne(...params)
     }
 
-    static async DeleteOne( ...params) {
+    static async DeleteOne(...params) {
       return this.getCollection(this.dbName, this.collection).deleteOne(...params)
-
     }
   }
 }

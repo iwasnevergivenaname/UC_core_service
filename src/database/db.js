@@ -1,7 +1,7 @@
 const {MongoClient} = require("mongodb")
 const uri = process.env.NODE_MONGODB_URI
 
-class Database {
+class Mongo {
   constructor() {
     this.client = new MongoClient(uri,
       {
@@ -20,5 +20,5 @@ class Database {
 }
 
 module.exports = {
-  Database
+  Mongo
 }
