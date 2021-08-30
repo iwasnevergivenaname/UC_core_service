@@ -13,14 +13,17 @@ module.exports = (pubSub) => {
       },
       bookTrip: async (_, {booking}, {dataSources}) => {
         return dataSources.bookingApi.bookTrip(booking)
+      },
+      getTripEstimate: async (parent, {pickup, dropoff}, {dataSources}) => {
+        return dataSources.pricingApi.getPriceEstimate({pickup, dropoff})
       }
+
     },
     Subscription: {
       tripSub: {
         subscribe: withFilter(
           () => pubSub.asyncIterator(["TRIP_SUB"]),
           (payload, variables) => {
-            console.log(payload, variables)
             // Only push an update if the comment is on
             // the correct repository for this operation
             return payload.tripSub && payload.tripSub.success && payload.tripSub.success.tripId === variables.tripId
@@ -29,9 +32,6 @@ module.exports = (pubSub) => {
       }
     },
     User: {
-      getTripEstimate: async (parent, {pickup, dropoff}, {dataSources}) => {
-        return dataSources.pricingApi.getPriceEstimate({pickup, dropoff})
-      },
       trips: async (parent, __, {dataSources}) => {
         return parent.trips
       }

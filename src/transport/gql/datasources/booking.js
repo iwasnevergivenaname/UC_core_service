@@ -28,7 +28,22 @@ class WSClient {
 
   async onMessageHook(cb) {
     this.client.on("message", (data) => {
-      cb(JSON.parse(data))
+      console.log("onMessageHook")
+      console.log(data)
+      console.log("onMessageHook")
+      if (data) {
+        data = data.toString("utf8")
+        console.log("----")
+        console.log(data)
+        console.log("----")
+        let r = data
+        try {
+          r = JSON.parse(data)
+        }
+        catch {
+        }
+        cb(r)
+      }
     })
   }
 
@@ -81,7 +96,10 @@ module.exports = function (app) {
         const id = v4()
 
         //fetch the user
-        const user = await this.models.UserModel.FindOne({id: this.context.user.id})
+        const user = await this.models.UserModel.FindOne({
+          id: this.context.user.id
+        })
+
         if (!user) {
           return {
             error: {
@@ -95,11 +113,7 @@ module.exports = function (app) {
         })
 
         if (incompleteTrips.length) {
-          return {
-            error: {
-              message: "There is an ongoing trip session"
-            }
-          }
+          return {success: incompleteTrips[0]}
         }
 
         const trip = {
@@ -130,7 +144,6 @@ module.exports = function (app) {
     async bookTrip({pickup, dropoff}) {
       try {
         const {id} = this.context.user
-        console.log(id)
         let cache = await this.redis.get(id)
         if (!cache) {
           throw Error("No trip session found")
@@ -140,22 +153,35 @@ module.exports = function (app) {
           userId: id, pickup, dropoff, tripId: cache.tripId
         })
 
-        await this.models.UserModel.UpdateOne({
-          id: this.context.user.id, trips: {
-            $elemMatch: {
-              id: cache.tripId
-            }
-          }
-        }, {
-          $set: {
-            "trips.$.status": TripStatus.Pending,
-            "trips.$.pickup": pickup,
-            "trips.$.dropoff": dropoff
-          }
-        }, {upsert: true})
+        // await this.models.UserModel.UpdateOne({
+        //   id: this.context.user.id, trips: {
+        //     $elemMatch: {
+        //       id: cache.tripId
+        //     }
+        //   }
+        // }, {
+        //   $set: {
+        //     "trips.$.status": TripStatus.Pending,
+        //     "trips.$.pickup": pickup,
+        //     "trips.$.dropoff": dropoff
+        //   }
+        // }, {upsert: true})
 
         cache = await this.redis.get(id)
-        BookingService.TripUpdates(cache.tripId)
+        BookingService.TripUpdates(cache.tripId, async () => {
+          await this.models.UserModel.UpdateOne({
+            id: this.context.user.id, trips: {
+              $elemMatch: {
+                id: cache.tripId
+              }
+            }
+          }, {
+            $set: {
+              "trips.$.status": TripStatus.Completed
+            }
+          }, {upsert: true})
+
+        })
         return {
           success: {
             status: cache.status
@@ -163,7 +189,6 @@ module.exports = function (app) {
         }
       }
       catch (error) {
-        console.log(error)
         return {
           error: {
             message: error.message
@@ -172,13 +197,17 @@ module.exports = function (app) {
       }
     }
 
-    static TripUpdates(tripId) {
+    static TripUpdates(tripId, cb) {
       setTimeout(async () => {
         try {
           const client = new WSClient(tripId, TRIP_SERVICE_WS_URL)
           await client.init()
           await client.onMessageHook(async (data) => {
-
+            if (typeof data !== "object") {
+              return
+            }
+            console.log("***")
+            console.log(data)
             pubSub.publish("TRIP_SUB", {
               tripSub: {
                 success: {
@@ -188,8 +217,12 @@ module.exports = function (app) {
                 }
               }
             })
+            if (data.tripEnded) {
+              setTimeout(async () => {
+                await cb()
+              }, 0)
+            }
           })
-
         }
         catch (error) {
           console.log(error)

@@ -39,6 +39,7 @@ const typeDefs = gql`
 
     type TripSessionMeta {
         id: String
+        status: String
     }
 
     type BeginTripSession {
@@ -68,8 +69,6 @@ const typeDefs = gql`
         password: String!
         information: UserInformation
         trips: [Trip]!
-        getTripEstimate(pickup: Coordinate!, dropoff: Coordinate!):GetTripEstimateResponse!
-        getBookingStatus(token: String!): BookingStatus!
     }
     
     type RouteConfirmation {
@@ -125,6 +124,7 @@ const typeDefs = gql`
     type Mutation {
         beginTripSession: BeginTripSession
         bookTrip(booking: BookTrip!): BookingResponse!
+        getTripEstimate(pickup: Coordinate!, dropoff: Coordinate!):GetTripEstimateResponse!
     }
 
     type Subscription {
