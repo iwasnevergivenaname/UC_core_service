@@ -17,7 +17,7 @@ console.log("boop")
 //   })
 
 // module.exports.openConnection = ()  => {
-const uri = "mongodb+srv://petlover1:ilovepets69@ridercluster.y2q6p.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const uri = process.env.NODE_MONGODB_URI
 
 const client = new MongoClient(uri,
   {
