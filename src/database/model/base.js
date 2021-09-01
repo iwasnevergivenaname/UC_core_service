@@ -9,9 +9,9 @@ module.exports = function (db) {
       return db.collection(dbName, colName)
     }
 
-    // static async Insert(...params) {
-    //
-    // }
+    static async Insert(...params) {
+      return this.getCollection(this.dbName, this.collection).insertOne(...params)
+    }
 
     static async FindOne(...params) {
       return this.getCollection(this.dbName, this.collection).findOne(...params)

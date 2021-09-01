@@ -24,17 +24,23 @@ module.exports = class App {
     // next we are ready to take in connections
     this.gql = makeGql(this)
     await this.gql.listen(async () => {
-      const tripWsClient = makeWsClient(this)
-      tripWsClient.Config(process.env.TRIP_SERVICE_WS_URL, "/events")
-      await tripWsClient.Begin((data) => {
-        const {id, topic, reqId} = data
-        app.gql.pubSub.publish("TRIP_EVENT", {
-          postCreated: {
-            author: "Ali Baba",
-            comment: "Open sesame"
-          }
+      try {
+        const tripWsClient = makeWsClient(this)
+        tripWsClient.Config(process.env.TRIP_SERVICE_WS_URL, "/events")
+        await tripWsClient.Begin((data) => {
+          const {id, topic, reqId} = data
+          app.gql.pubSub.publish("TRIP_EVENT", {
+            postCreated: {
+              author: "Ali Baba",
+              comment: "Open sesame"
+            }
+          })
         })
-      })
+      }
+      catch (e) {
+        throw new Error(e)
+      }
+
     })
 
     this.http = makeHttp(this)

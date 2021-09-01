@@ -97,7 +97,7 @@ module.exports = function (app) {
 
         //fetch the user
         const user = await this.models.UserModel.FindOne({
-          id: this.context.user.id
+          email: this.context.user.email
         })
 
         if (!user) {
@@ -123,11 +123,11 @@ module.exports = function (app) {
         user.trips.push(trip)
 
         await Promise.all([
-          this.redis.set(this.context.user.id, {
+          this.redis.set(this.context.user.email, {
             status: TripStatus.Created,
             tripId: id
           }),
-          this.models.UserModel.UpdateOne({id: this.context.user.id}, {$set: {trips: user.trips}}, {upsert: true})
+          this.models.UserModel.UpdateOne({email: this.context.user.email}, {$set: {trips: user.trips}}, {upsert: true})
         ])
 
         return {success: {id: id}}
@@ -143,14 +143,14 @@ module.exports = function (app) {
 
     async bookTrip({pickup, dropoff}) {
       try {
-        const {id} = this.context.user
-        let cache = await this.redis.get(id)
+        const {email} = this.context.user
+        let cache = await this.redis.get(email)
         if (!cache) {
           throw Error("No trip session found")
         }
 
         const bookingConf = await this.post("/", {
-          userId: id, pickup, dropoff, tripId: cache.tripId
+          userEmail: email, pickup, dropoff, tripId: cache.tripId
         })
 
         // await this.models.UserModel.UpdateOne({
@@ -167,10 +167,10 @@ module.exports = function (app) {
         //   }
         // }, {upsert: true})
 
-        cache = await this.redis.get(id)
+        cache = await this.redis.get(email)
         BookingService.TripUpdates(cache.tripId, async () => {
           await this.models.UserModel.UpdateOne({
-            id: this.context.user.id, trips: {
+            email: this.context.user.email, trips: {
               $elemMatch: {
                 id: cache.tripId
               }

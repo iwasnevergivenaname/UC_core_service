@@ -6,5 +6,9 @@ module.exports = function (model) {
     static FindOne(param) {
       return super.FindOne(param)
     }
+
+    static Insert(param) {
+      return super.Insert(param)
+    }
   }
 }

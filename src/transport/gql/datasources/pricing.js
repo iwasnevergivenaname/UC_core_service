@@ -16,8 +16,8 @@ module.exports = function (app) {
 
     async getPriceEstimate({pickup, dropoff}) {
       try {
-        console.log(1, this.context.user.id)
-        const cache = await this.redis.get(this.context.user.id)
+        console.log(1, this.context.user)
+        const cache = await this.redis.get(this.context.user.email)
         console.log(cache)
         if (!cache) {
           return {
@@ -27,7 +27,7 @@ module.exports = function (app) {
 
         const tripId = cache.tripId
 
-        const userDoc = await this.models.UserModel.FindOne({id: this.context.user.id}, {trips: {$elemMatch: {id: tripId}}})
+        const userDoc = await this.models.UserModel.FindOne({email: this.context.user.email}, {trips: {$elemMatch: {id: tripId}}})
         if (!userDoc.trips.length) {
           throw Error("No trip was found")
         }
@@ -41,7 +41,7 @@ module.exports = function (app) {
         }
 
         await this.models.UserModel.UpdateOne({
-          id: this.context.user.id, trips: {
+          email: this.context.user.email, trips: {
             $elemMatch: {
               id: tripId
             }

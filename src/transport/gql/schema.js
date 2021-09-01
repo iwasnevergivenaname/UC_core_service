@@ -64,11 +64,12 @@ const typeDefs = gql`
     }
 
     type User {
-        id: ID!
+#        id: ID!
         email: String!
         password: String!
         information: UserInformation
         trips: [Trip]!
+        token: String
     }
     
     type RouteConfirmation {

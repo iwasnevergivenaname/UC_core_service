@@ -36,7 +36,6 @@ module.exports = (application) => {
         // authentication
         context: async ({req, res}) => {
           const token = req.headers.authorization || ""
-
           const {user} = jwt.verify(token, JWT_PRIVATE_KEY)
           if (token.length === 0) {
             res.sendStatus(401)
